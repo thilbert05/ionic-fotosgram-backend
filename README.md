@@ -7,7 +7,7 @@
 
 > Para correr la aplicación en modo de desarrollo usar:
 >
->> Abrir la terminar y ejecutar: `tsc -w`
+>> Abrir la terminal y ejecutar: `tsc -w`
 >
->> Abrir una segunda terminar y ejecutar: `npm run start:dev`
+>> Abrir una segunda terminal y ejecutar: `npm run start:dev`
 >
