@@ -1,8 +1,11 @@
 import Server from './classes/server';
+import express, {Request, Response, NextFunction} from 'express';
+import fileupload from 'express-fileupload';
+
 import userRoutes from './routes/usuario';
+import postRoutes from './routes/post';
+
 import mongoose from 'mongoose';
-import express from 'express';
-import {Request, Response, NextFunction} from 'express';
 
 const server = new Server();
 
@@ -11,9 +14,14 @@ const server = new Server();
 server.app.use(express.urlencoded({extended: true}));
 server.app.use(express.json());
 
+//FileUpload
+
+server.app.use(fileupload({useTempFiles: true}));
+
 //Usar rutas
 
 server.app.use('/user', userRoutes);
+server.app.use('/posts', postRoutes);
 
 //Manejo de errores
 server.app.use((err, req: Request, res: Response, next: NextFunction) => {
@@ -33,9 +41,14 @@ server.app.use((err, req: Request, res: Response, next: NextFunction) => {
         ok: false,
         message: err.errors.nombre.message
       });
+    } else if (err.errors.usuario) {
+      return res.status(500).json({
+        ok: false,
+        message: err.errors.usuario.message
+      });
     }
   } else {
-    console.log('Error', err);
+    // console.log('Error', err);
     return res.status(500).json({
       ok: false,
       message: err.message

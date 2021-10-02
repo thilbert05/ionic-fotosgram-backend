@@ -4,15 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = __importDefault(require("./classes/server"));
-const usuario_1 = __importDefault(require("./routes/usuario"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const express_1 = __importDefault(require("express"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const usuario_1 = __importDefault(require("./routes/usuario"));
+const post_1 = __importDefault(require("./routes/post"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const server = new server_1.default();
 //Express Body parser
 server.app.use(express_1.default.urlencoded({ extended: true }));
 server.app.use(express_1.default.json());
+//FileUpload
+server.app.use(express_fileupload_1.default({ useTempFiles: true }));
 //Usar rutas
 server.app.use('/user', usuario_1.default);
+server.app.use('/posts', post_1.default);
 //Manejo de errores
 server.app.use((err, req, res, next) => {
     if (err.code && err.error.message) {
@@ -34,9 +39,15 @@ server.app.use((err, req, res, next) => {
                 message: err.errors.nombre.message
             });
         }
+        else if (err.errors.usuario) {
+            return res.status(500).json({
+                ok: false,
+                message: err.errors.usuario.message
+            });
+        }
     }
     else {
-        console.log('Error', err);
+        // console.log('Error', err);
         return res.status(500).json({
             ok: false,
             message: err.message

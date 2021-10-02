@@ -119,4 +119,21 @@ userRoutes.post('/update', [auth_1.verificaToken], (req, res, next) => {
         next(err);
     });
 });
+userRoutes.get('/', [auth_1.verificaToken], (req, res, next) => {
+    try {
+        const usuario = req.usuario;
+        if (!usuario) {
+            const error = new Error('Usuario no autenticado');
+            const code = 401;
+            throw { code, error };
+        }
+        return res.json({
+            ok: true,
+            usuario
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+});
 exports.default = userRoutes;
